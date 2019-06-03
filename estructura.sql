@@ -1,21 +1,22 @@
--- this version is using your browser's built-in SQLite
-CREATE TABLE senador
+-- TODO Re usar id_votos en id temas
+
+CREATE TABLE IF NOT EXISTS senador
 	(
-     id integer primary key, 
-     nombre varchar(20) NOT NULL, 
+     id_s integer primary key, 
+     nombre varchar(20) NOT NULL UNIQUE, 
      partido varchar(30),
      region varchar(30)
     );
     
     
-CREATE TABLE vigencia_legislatura
+CREATE TABLE IF NOT EXISTS vigencia_legislatura
 	(
      id_legislatura integer  NOT NULL, 
      id_senador integer NOT NULL, 
      asistencia_total integer
     );
 
-CREATE TABLE legislatura
+CREATE TABLE IF NOT EXISTS legislatura
 	(
      id integer  primary key,
      fecha_inicial TEXT NOT NULL, 
@@ -23,16 +24,16 @@ CREATE TABLE legislatura
     );
 
 
-CREATE TABLE tema
+CREATE TABLE IF NOT EXISTS tema
 	(
      id integer  primary key,
      descripcion varchar(30) NOT NULL, 
      numero_session integer NOT NULL,
-     id_legislatura integer NOT NULL
+     id_legislatura integer NOT NULL,
      fecha_epoch integer NOT NULL
     );
 
-CREATE TABLE intervenciones
+CREATE TABLE IF NOT EXISTS intervenciones
 	(
      id_senador integer NOT NULL,
      id_tema integer NOT NULL, 
@@ -40,7 +41,7 @@ CREATE TABLE intervenciones
      n_orden integer NOT NULL
     );
 
-CREATE TABLE votos_temas
+CREATE TABLE IF NOT EXISTS votos_temas
 	(
      id_tema integer NOT NULL,
      id_senador integer NOT NULL,
