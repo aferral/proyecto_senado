@@ -34,7 +34,7 @@ requests_link = requests.get(Link_Principal)
 soup_html = BeautifulSoup(requests_link.text, 'html.parser')
 
 Tabla_legislaturas=soup_html.find("select").find_all("option")
-#Tabla_legislaturas=Tabla_legislaturas[::-1]
+Tabla_legislaturas=Tabla_legislaturas[::-1]
 
 for i in range(len(Tabla_legislaturas)):
     requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value")))
@@ -45,9 +45,8 @@ for i in range(len(Tabla_legislaturas)):
     #print(i)
     Tabla_sesiones=soup_html.find_all("select")[1].find_all("option")
     print("Legislatura:"+ str(Legislatura))
-    #Tabla_sesiones=Tabla_sesiones[::-1]
+    Tabla_sesiones=Tabla_sesiones[::-1]
     for j in range(len(Tabla_sesiones)-1):
-        j=j+10
         requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value")))
         soup_html = BeautifulSoup(requests_link.text, 'html.parser')
         requests_sesion="http://www.senado.cl/wspublico/diariosesion.php?idsesion="
