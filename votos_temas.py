@@ -32,15 +32,21 @@ soup_html = BeautifulSoup(requests_link.text, 'html.parser')
 
 Tabla_legislaturas=soup_html.find("select").find_all("option")
 
+Tabla_legislaturas=Tabla_legislaturas[::-1]
 
 for i in range(len(Tabla_legislaturas)):
     requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value")))
     soup_html = BeautifulSoup(requests_link.text, 'html.parser')
     Tabla_sesiones=soup_html.find_all("select")[1].find_all("option")
+    
+    print("Legislatura:"+ str(Legislatura))
+    Tabla_sesiones=Tabla_sesiones[::-1]
     for j in range(len(Tabla_sesiones)-1):
-        j=j+1
         requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value")))
         soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+        
+        sesion_real=int(Tabla_sesiones[j].get_text()[2:5])
+        print("Session:"+str(sesion_real)) 
         
         tabla_temas=soup_html.find("table", attrs={"class":'clase_tabla'})
         tabla_temas_tr=tabla_temas.find_all("tr")
@@ -67,7 +73,7 @@ for i in range(len(Tabla_legislaturas)):
                 
                 Diputado=Diputado.find_all("td")
                 Diputado_nombre=Diputado[0].get_text()
-                Diputado=Dipu tado[1:]
+                Diputado=Diputado[1:]
                 voto_diputado=0
                 for n in range(len(Diputado)):
                     if Diputado[n].get_text()!=" ":

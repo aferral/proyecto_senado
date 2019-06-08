@@ -11,10 +11,11 @@ import pandas as pd
 
 
 
-Empty_class = {'id': [],
+Empty_class = {'id_tema': [],
         'descripcion': [],
         'numero_session': [],
         'id_legislatura': [],
+        'id_session': [],
         'fecha_epoch': []}
 
 
@@ -26,6 +27,7 @@ soup_html = BeautifulSoup(requests_link.text, 'html.parser')
 
 Tabla_legislaturas=soup_html.find("select").find_all("option")
 
+Tabla_legislaturas=Tabla_legislaturas[::-1]
 
 for i in range(len(Tabla_legislaturas)):
     requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value")))
@@ -36,11 +38,11 @@ for i in range(len(Tabla_legislaturas)):
     #print(i)
     Tabla_sesiones=soup_html.find_all("select")[1].find_all("option")
     print("Legislatura:"+ str(Legislatura))
+    Tabla_sesiones=Tabla_sesiones[::-1]
     for j in range(len(Tabla_sesiones)-1):
-        j=j+1
         requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value")))
         soup_html = BeautifulSoup(requests_link.text, 'html.parser')
-        
+        id_session=Tabla_sesiones[j].get("value")
         sesion_real=int(Tabla_sesiones[j].get_text()[2:5])
         print("Session:"+str(sesion_real)) 
         tabla_temas=soup_html.find("table", attrs={"class":'clase_tabla'})
@@ -65,10 +67,11 @@ for i in range(len(Tabla_legislaturas)):
             fecha_real= fechas[k].get_text().strip()[:16]
             tema_real=tema_real.replace("\n", " ")
             
-            Empty_class['id'].append(href_list[k])
+            Empty_class['id_tema'].append(href_list[k])
             Empty_class['descripcion'].append(tema_real)
-            Empty_class['numero_session'].append(sesion_real)
-            Empty_class['id_legislatura'].append(Legislatura)
+            Empty_class['numero_session'].append(int(sesion_real))
+            Empty_class['id_session'].append(int(id_session))
+            Empty_class['id_legislatura'].append(int(Legislatura))
             Empty_class['fecha_epoch'].append(fecha_real)
         
         
