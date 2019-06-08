@@ -5,10 +5,9 @@ Created on Sun Jun  2 20:41:37 2019
 @author: darkh
 """
 
-import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-
+from utils import get_using_cache
 ##
 Empty_class = {'Nombre': [],
         'Partido': [],
@@ -19,9 +18,9 @@ Empty_class = {'Nombre': [],
 Link_Principal="http://www.senado.cl/appsenado/index.php?mo=senadores&ac=fichasenador&id="
 
 for i in range(2500):
-
-    requests_link = requests.get(Link_Principal+str(i+1))
-    soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+    url = Link_Principal+str(i+1)
+    request_text = get_using_cache(url)
+    soup_html = BeautifulSoup(request_text, 'html.parser')
     
     personal_info = soup_html.find("div", attrs={"class":'info sans'})
     

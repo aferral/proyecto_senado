@@ -5,10 +5,9 @@ Created on Mon Jun  3 01:08:43 2019
 @author: darkh
 """
 
-import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-
+from utils import get_using_cache
 
 #CREATE TABLE IF NOT EXISTS votos_temas	(
 #     id_tema integer NOT NULL,
@@ -27,23 +26,24 @@ Link_Principal="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=vota
 Link_redireccionar="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=votacionSala&legiid="
 
 Link_votos="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=detalleVotacion&votaid="
-requests_link = requests.get(Link_Principal)
-soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+texto_request = get_using_cache(Link_Principal)
+soup_html = BeautifulSoup(texto_request, 'html.parser')
 
 Tabla_legislaturas=soup_html.find("select").find_all("option")
 
 Tabla_legislaturas=Tabla_legislaturas[::-1]
 
 for i in range(len(Tabla_legislaturas)):
-    requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value")))
-    soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+    url = Link_redireccionar+str(Tabla_legislaturas[i].get("value"))
+    texto_request = get_using_cache(url)
+    soup_html = BeautifulSoup(texto_request, 'html.parser')
     Tabla_sesiones=soup_html.find_all("select")[1].find_all("option")
     
-    print("Legislatura:"+ str(Legislatura))
     Tabla_sesiones=Tabla_sesiones[::-1]
     for j in range(len(Tabla_sesiones)-1):
-        requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value")))
-        soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+        url = Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value"))
+        texto_request = get_using_cache(url)
+        soup_html = BeautifulSoup(texto_request, 'html.parser')
         
         sesion_real=int(Tabla_sesiones[j].get_text()[2:5])
         print("Session:"+str(sesion_real)) 
@@ -51,11 +51,12 @@ for i in range(len(Tabla_legislaturas)):
         tabla_temas=soup_html.find("table", attrs={"class":'clase_tabla'})
         tabla_temas_tr=tabla_temas.find_all("tr")
         temas=[]
+        fechas = []
         for k in range(len(tabla_temas_tr)):
             if '#3333FF">TEMA:' in str(tabla_temas_tr[k]).split():
                 temas.append(tabla_temas_tr[k])
                 fechas.append(tabla_temas_tr[k+2])
-        
+        href_list = [] 
         if temas!=[]: 
             href=tabla_temas.find_all("a")
             for k in range(len(href)):
@@ -63,9 +64,9 @@ for i in range(len(Tabla_legislaturas)):
         
         for l in range(len(href_list)):
             print(href_list[l])
-            requests_link = requests.get(Link_votos+str(href_list[l]))
-            soup_html = BeautifulSoup(requests_link.text, 'html.parser')
-#        http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=detalleVotacion&votaid=7400
+            url = Link_votos+str(href_list[l])
+            texto_request = get_using_cache(url)
+            soup_html = BeautifulSoup(texto_request, 'html.parser')
             Tabla_Diputados=soup_html.find_all("tr",attrs={"align":'left'})
             Tabla_Diputados=Tabla_Diputados[1:]
             for m in range(len(Tabla_Diputados)):

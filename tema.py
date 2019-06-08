@@ -5,10 +5,9 @@ Created on Mon Jun  3 01:08:43 2019
 @author: darkh
 """
 
-import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-
+from utils import get_using_cache
 
 
 Empty_class = {'id_tema': [],
@@ -22,16 +21,19 @@ Empty_class = {'id_tema': [],
 Link_origen="http://www.senado.cl"
 Link_Principal="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=votacionSala&legiid=490&sesiid=8234"
 Link_redireccionar="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=votacionSala&legiid="
-requests_link = requests.get(Link_Principal)
-soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+
+url = Link_Principal
+request_text = get_using_cache(url)
+soup_html = BeautifulSoup(request_text, 'html.parser')
 
 Tabla_legislaturas=soup_html.find("select").find_all("option")
 
 Tabla_legislaturas=Tabla_legislaturas[::-1]
 
 for i in range(len(Tabla_legislaturas)):
-    requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value")))
-    soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+    url = Link_redireccionar+str(Tabla_legislaturas[i].get("value"))
+    request_text = get_using_cache(url)
+    soup_html = BeautifulSoup(request_text, 'html.parser')
     
     Legislatura=Tabla_legislaturas[i].get_text().strip().split()[0]
     
@@ -40,8 +42,9 @@ for i in range(len(Tabla_legislaturas)):
     print("Legislatura:"+ str(Legislatura))
     Tabla_sesiones=Tabla_sesiones[::-1]
     for j in range(len(Tabla_sesiones)-1):
-        requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value")))
-        soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+        url = Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value"))
+        request_text = get_using_cache(url)
+        soup_html = BeautifulSoup(request_text, 'html.parser')
         id_session=Tabla_sesiones[j].get("value")
         sesion_real=int(Tabla_sesiones[j].get_text()[2:5])
         print("Session:"+str(sesion_real)) 

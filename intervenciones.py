@@ -12,10 +12,9 @@ Created on Mon Jun  3 01:08:43 2019
 @author: darkh
 """
 
-import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-
+from utils import get_using_cache
 
 
 Empty_class = {'id_senador': [],
@@ -30,15 +29,17 @@ Link_Principal="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=vota
 Link_redireccionar="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=votacionSala&legiid="
 
 requests_sesion="http://www.senado.cl/wspublico/diariosesion.php?idsesion="
-requests_link = requests.get(Link_Principal)
-soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+url=Link_Principal
+request_text = get_using_cache(url)
+soup_html = BeautifulSoup(request_text, 'html.parser')
 
 Tabla_legislaturas=soup_html.find("select").find_all("option")
 Tabla_legislaturas=Tabla_legislaturas[::-1]
 
 for i in range(len(Tabla_legislaturas)):
-    requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value")))
-    soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+    url = Link_redireccionar+str(Tabla_legislaturas[i].get("value"))
+    request_text = get_using_cache(url)
+    soup_html = BeautifulSoup(request_text, 'html.parser')
     
     Legislatura=Tabla_legislaturas[i].get_text().strip().split()[0]
     
@@ -47,15 +48,17 @@ for i in range(len(Tabla_legislaturas)):
     print("Legislatura:"+ str(Legislatura))
     Tabla_sesiones=Tabla_sesiones[::-1]
     for j in range(len(Tabla_sesiones)-1):
-        requests_link = requests.get(Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value")))
-        soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+        url = Link_redireccionar+str(Tabla_legislaturas[i].get("value"))+"&sesiid="+str(Tabla_sesiones[j].get("value"))
+        request_text = get_using_cache(url)
+        soup_html = BeautifulSoup(request_text, 'html.parser')
         requests_sesion="http://www.senado.cl/wspublico/diariosesion.php?idsesion="
         sesion_real=int(Tabla_sesiones[j].get_text()[2:5])
         print("Session:"+str(sesion_real)) 
         
         id_session=Tabla_sesiones[j].get("value")
-        requests_link = requests.get(requests_sesion+str(id_session))
-        soup_html = BeautifulSoup(requests_link.text, 'lxml')
+        url = requests_sesion+str(id_session)
+        request_text = get_using_cache(url)
+        soup_html = BeautifulSoup(request_text, 'lxml')
         tabla_intervenciones=soup_html.find_all("intervencion", attrs={"janusmarca":"0"}    )
         if tabla_intervenciones==[]:
             continue

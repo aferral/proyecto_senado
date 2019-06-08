@@ -1,4 +1,3 @@
--- TODO Re usar id_votos en id temas
 
 CREATE TABLE IF NOT EXISTS senador
 	(
@@ -24,19 +23,26 @@ CREATE TABLE IF NOT EXISTS legislatura
     );
 
 
+CREATE TABLE IF NOT EXISTS sessiones
+(
+id integer primary key,
+numero_session integer NOT NULL,
+id_legislatura integer NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS tema
 	(
      id integer  primary key,
      descripcion varchar(30) NOT NULL, 
-     numero_session integer NOT NULL,
-     id_legislatura integer NOT NULL,
+     id_sesion integer NOT NULL,
      fecha_epoch integer NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS intervenciones
 	(
      id_senador integer NOT NULL,
-     id_tema integer NOT NULL, 
+     id_sesion integer NOT NULL,
+     id_cargo integer,
      texto varchar(30) NOT NULL,
      n_orden integer NOT NULL
     );

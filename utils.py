@@ -1,13 +1,11 @@
 import requests
-import base64
 import os 
-import io
-
+from urllib.parse import quote
 cache_folder='htmls_descargados'
 os.makedirs(cache_folder,exist_ok=True)
 
 def get_using_cache(url):
-    name = base64.b64encode(url.encode()).decode('utf-8') # consigue el nombre en un formato unico (evita problemas con espacios y signos)
+    name = quote(url, '')
     f_name = "{0}.html".format(name)
     path_html = os.path.join(cache_folder,f_name)
     

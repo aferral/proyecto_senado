@@ -1,15 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
-
+from utils import get_using_cache
 """
 Consigue las legislaturas mediante ir a una session en particular y revisar el select de todas las legislaturas
 
 Crear un csv legislaturas.csv que contiene n_legislatura,fecha inicio, fecha fin 
 
 """
-
-r=requests.get("http://www.senado.cl/appsenado/index.php?mo=sesionessala&listado=1&ac=listado&legi=490")
-soup=BeautifulSoup(r.content)
+url = "http://www.senado.cl/appsenado/index.php?mo=sesionessala&listado=1&ac=listado&legi=490"
+request_text = get_using_cache(url)
+soup=BeautifulSoup(request_text)
 
 legislaturas=soup.find_all('select',attrs={'name' : 'legislaturas'})[0]
 

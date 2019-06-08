@@ -7,10 +7,12 @@ Created on Sun Jun  2 16:41:39 2019
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from utils import get_using_cache
 
 link_principal="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=asistenciaSenadores&camara=S&legiini=361&legiid=361" #"http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=asistenciaSenadores&camara=S&legiini=361&legiid=381"  
-requests_link = requests.get(link_principal)
-soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+
+request_text = get_using_cache(link_principal)
+soup_html = BeautifulSoup(request_text, 'html.parser')
 
 link_redireccionar="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=asistenciaSenadores&camara=S&legiini=361&legiid=" #"http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=asistenciaSenadores&camara=S&legiini=361&legiid=381"  
 
@@ -28,8 +30,9 @@ Empty_class = {'Legislatura': [],
 for i in range(len(Tabla_iterator)):
     Legislatura=Tabla_iterator[i].get_text().strip().split()[0]
     link_redireccionar="http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=asistenciaSenadores&camara=S&legiini=361&legiid=" #"http://www.senado.cl/appsenado/index.php?mo=sesionessala&ac=asistenciaSenadores&camara=S&legiini=361&legiid=381"  
-    requests_link = requests.get(link_redireccionar+str(Tabla_iterator[i].get("value")))
-    soup_html = BeautifulSoup(requests_link.text, 'html.parser')
+    url = link_redireccionar+str(Tabla_iterator[i].get("value"))
+    request_text = get_using_cache(url)
+    soup_html = BeautifulSoup(request_text, 'html.parser')
     tables = soup_html.find_all("table", attrs={"class":'clase_tabla'})
 
     list_tables_senadores=table[1].find_all("tr", attrs={"align":'left'} )
