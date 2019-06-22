@@ -1,7 +1,7 @@
 stops = ['un',
  'una','alvaro','seria','quiero','seria','mis','saludarles','posible','pilar','despide','atentamente',
  'unas','yunny','wrote','enviado','iPhone','desde',
- 'unos',
+ 'unos','iphone','senor','hay','cuales','importancia','otros'
  'uno',
  'sobre',
  'todo',
@@ -177,4 +177,9 @@ stops = ['un',
  'podrian',
  'podriais','strong',
  'yo',
- 'aquel']
+ 'aquel','presidenta','congreso','aca','abigeato','cariola','absolutamente']
+
+
+with open('./proceso_texto/stop_words_extras.txt') as f:
+    for l in f.readlines():
+        stops.append(l.strip())
