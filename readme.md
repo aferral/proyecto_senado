@@ -59,7 +59,11 @@ En que en resumen son 7 tablas:
     - id_senador: id Senador.
     - voto: Voto que realizo id_senador en id_tema.  Voto= [1:Aprobar, 2:Desarpobar, 3:Abstinencia, 4:Pareo], se puede ver que no cuenta la inasistencia del senador, pues se puede ver cruzando las otras tablas de Vigencia Legislatura y Legislatura.
     
-  
+## TODO
+
+- [ ] tarea 1
+- [ ] tarea 2
+- [ ] ...   
   
 ## Cualquier duda al telegram. 
 
