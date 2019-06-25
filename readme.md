@@ -59,6 +59,21 @@ En que en resumen son 7 tablas:
     - id_senador: id Senador.
     - voto: Voto que realizo id_senador en id_tema.  Voto= [1:Aprobar, 2:Desarpobar, 3:Abstinencia, 4:Pareo], se puede ver que no cuenta la inasistencia del senador, pues se puede ver cruzando las otras tablas de Vigencia Legislatura y Legislatura.
     
+## Como iniciar el archivo .db
+La extensión .db es un archivo de base de datos, que es en cual trabajaremos en este proyecto. Para poder crear este a1rchivo se deben correr los siguientes códigos de python para generar los csv:
+- get_legislaturas
+- senador
+- vigencia_legislatura
+- temas
+- votos_temas
+
+Despues de haber generado los .csv se genera el .db corriendo los archivos en el siguiente orden:
+ 1. start_db
+ 2. csv_to_db
+Finalmente se generará el archivo "proyecto_senadores.db". 
+
+Nota: Se pueden saltar la generación de los .csv descargando el archivo que se encuentra en Telegram.
+
 ## TODO
 
 - [ ] tarea 1
